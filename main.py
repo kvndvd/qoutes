@@ -50,6 +50,7 @@ def scrape_quotes():
         except NoSuchElementException:
             break
 
+    driver.quit()
     return quotes_data
 
 def save_to_csv(data):
@@ -62,12 +63,9 @@ def save_to_csv(data):
         writer.writerows(data)
 
 def main():
-    try:
-        data = scrape_quotes()
-        save_to_csv(data)
-        print("Done. Saved to output/quotes.csv")
-    finally:
-        driver.quit()
+    data = scrape_quotes()
+    save_to_csv(data)
+    print("Done. Saved to output/quotes.csv")
 
 if __name__ == "__main__":
     main()
