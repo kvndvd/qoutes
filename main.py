@@ -10,23 +10,27 @@ BASE_URL = "https://quotes.toscrape.com/"
 
 def session():
     options = Options()
-    # options.add_argument("--headless")
-    # options.add_argument("--no-sandbox")
-    # options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(options=options)
     return driver
 
 def scrape_quotes():
+    print("Starting main.py")
     driver = session()
     quotes_data = []
     seen = set()
 
     driver.get(BASE_URL)
+    print(f"Opening link {BASE_URL}")
 
     while True:
         time.sleep(1)
 
+
         quotes = driver.find_elements(By.CSS_SELECTOR, "div.quote")
+        print("Gathering data...")
 
         for quote in quotes:
             text = quote.find_element(By.CSS_SELECTOR, "span.text").text
@@ -38,6 +42,7 @@ def scrape_quotes():
             if key not in seen:
                 seen.add(key)
                 quotes_data.append([text, author, ", ".join(tag_list)])
+
 
         try:
             next_button = driver.find_element(By.CSS_SELECTOR, "li.next a")
@@ -51,6 +56,7 @@ def save_to_csv(data):
     os.makedirs("output", exist_ok=True) # make new folder for the output csv
 
     with open("output/quotes.csv", "w", newline="", encoding="utf-8") as file: #create csv file
+        print("Saving to csv file")
         writer = csv.writer(file)
         writer.writerow(["Quote", "Author", "Tags"])
         writer.writerows(data)
