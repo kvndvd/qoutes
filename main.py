@@ -62,8 +62,6 @@ def save_to_csv(data):
         writer.writerows(data)
 
 def main():
-    driver = session()
-
     try:
         data = scrape_quotes()
         save_to_csv(data)
