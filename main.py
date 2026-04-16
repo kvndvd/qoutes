@@ -9,11 +9,11 @@ from selenium.common.exceptions import NoSuchElementException
 BASE_URL = "https://quotes.toscrape.com/"
 
 def session():
-    # options = Options()
+    options = Options()
     # options.add_argument("--headless")
-    # options.add_argument("--no-sandbox")
-    # options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
     return driver
 
 def scrape_quotes():
@@ -25,12 +25,10 @@ def scrape_quotes():
     driver.get(BASE_URL)
     print(f"Opening link {BASE_URL}")
 
+    print("Gathering data...")
     while True:
         time.sleep(1)
-
-
         quotes = driver.find_elements(By.CSS_SELECTOR, "div.quote")
-        print("Gathering data...")
 
         for quote in quotes:
             text = quote.find_element(By.CSS_SELECTOR, "span.text").text
@@ -42,8 +40,6 @@ def scrape_quotes():
             if key not in seen:
                 seen.add(key)
                 quotes_data.append([text, author, ", ".join(tag_list)])
-
-
         try:
             next_button = driver.find_element(By.CSS_SELECTOR, "li.next a")
             next_button.click()
